@@ -89,11 +89,6 @@ RUN /usr/bin/pwsh -File ./powershell/setupPowerShell.ps1 -image Base && rm -rf .
 #    && dpkg -i azure-cli-latest-buster.deb \
 #    && rm -f azure-cli-latest-buster.deb
 
-# Install kubectl
-RUN az aks install-cli \
-    && chmod +x /usr/local/bin/kubectl \
-    && chmod +x /usr/local/bin/kubelogin
-
 # Copy and run the Helm install script, which fetches the latest release of Helm.
 COPY ./linux/helmInstall.sh .
 RUN bash ./helmInstall.sh && rm -f ./helmInstall.sh
@@ -126,6 +121,11 @@ RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 # Install any Azure CLI extensions that should be included by default.
 RUN az extension add --system --name ai-examples -y
 RUN az extension add --system --name ssh -y
+
+# Install kubectl
+RUN az aks install-cli \
+    && chmod +x /usr/local/bin/kubectl \
+    && chmod +x /usr/local/bin/kubelogin
 
 # github CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg \
