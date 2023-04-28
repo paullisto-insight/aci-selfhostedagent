@@ -82,7 +82,7 @@ RUN /usr/bin/pwsh -File ./powershell/setupPowerShell.ps1 -image Base && rm -rf .
 # If you wish to have CloudPSDrive - persistent storage capability on the devoops agent or run commands directly on vms with PSCloudShellUtility run the invoke-preparepowershellscript
 #COPY ./linux/powershell/Invoke-PreparePowerShell.ps1 linux/powershell/Invoke-PreparePowerShell.ps1
 
-RUN curl -L https://aka.ms/InstallAzureCli | bash
+RUN curl -L https://aka.ms/InstallAzureCli | sudo bash
 
 # Install any Azure CLI extensions that should be included by default.
 RUN az extension add --system --name ai-examples -y
