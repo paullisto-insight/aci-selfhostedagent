@@ -120,7 +120,14 @@ RUN curl -Lo bicep https://github.com/Azure/bicep/releases/latest/download/bicep
   && mv ./bicep /usr/local/bin/bicep \
   && bicep --help
 
-RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+# Install Azure CLI
+RUN mkdir -p /etc/apt/keyring \
+    && curl -sLS https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/keyrings/microsoft.gpg > /dev/null \
+    && chmod go+r /etc/apt/keyrings/microsoft.gpg \
+    && AZ_REPO=$(lsb_release -cs) \
+    && echo "deb [arch=`dpkg --print-architecture` signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | tee /etc/apt/sources.list.d/azure-cli.list \
+    && apt update \
+    && apt install azure-cli
 
 # github CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg \
