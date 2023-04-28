@@ -19,7 +19,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommend
     dos2unix \
     npm \
     software-properties-common \
-    libffi6
+    libssl-dev \
+    libffi-dev
 
 #COPY SOURCES .
 COPY linux/aptinstall.sh .
