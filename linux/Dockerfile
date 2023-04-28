@@ -12,7 +12,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommend
     jq \
     lsb-release \
     gpg \
-    apt-transport-https \
     gnupg \    
     wget \
     unzip \
