@@ -12,12 +12,13 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommend
     jq \
     lsb-release \
     gpg \
+    apt-transport-https \
     gnupg \    
     wget \
     unzip \
     dos2unix \
     npm \
-    software-properties-common 
+    software-properties-common
 
 #COPY SOURCES .
 COPY linux/aptinstall.sh .
@@ -82,7 +83,11 @@ RUN /usr/bin/pwsh -File ./powershell/setupPowerShell.ps1 -image Base && rm -rf .
 # If you wish to have CloudPSDrive - persistent storage capability on the devoops agent or run commands directly on vms with PSCloudShellUtility run the invoke-preparepowershellscript
 #COPY ./linux/powershell/Invoke-PreparePowerShell.ps1 linux/powershell/Invoke-PreparePowerShell.ps1
 
-RUN curl -L https://aka.ms/InstallAzureCli | sudo bash
+# Install latest Azure CLI package. CLI team drops latest (pre-release) package here prior to public release
+
+#RUN wget -nv https://azurecliprod.blob.core.windows.net/cloudshell-release/azure-cli-latest-buster.deb \
+#    && dpkg -i azure-cli-latest-buster.deb \
+#    && rm -f azure-cli-latest-buster.deb
 
 # Install any Azure CLI extensions that should be included by default.
 RUN az extension add --system --name ai-examples -y
@@ -120,14 +125,7 @@ RUN curl -Lo bicep https://github.com/Azure/bicep/releases/latest/download/bicep
   && mv ./bicep /usr/local/bin/bicep \
   && bicep --help
 
-# Install Azure CLI
-RUN mkdir -p /etc/apt/keyring \
-    && curl -sLS https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/keyrings/microsoft.gpg > /dev/null \
-    && chmod go+r /etc/apt/keyrings/microsoft.gpg \
-    && AZ_REPO=$(lsb_release -cs) \
-    && echo "deb [arch=`dpkg --print-architecture` signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | tee /etc/apt/sources.list.d/azure-cli.list \
-    && apt update \
-    && apt install azure-cli
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 # github CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg \
@@ -146,4 +144,3 @@ COPY linux/devopstart.sh .
 RUN chmod +x devopstart.sh
 
 ENTRYPOINT [ "./devopstart.sh" ]
-
