@@ -18,7 +18,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommend
     unzip \
     dos2unix \
     npm \
-    software-properties-common
+    software-properties-common \
+    libffi6
 
 #COPY SOURCES .
 COPY linux/aptinstall.sh .
