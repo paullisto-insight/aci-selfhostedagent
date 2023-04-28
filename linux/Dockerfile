@@ -89,10 +89,6 @@ RUN /usr/bin/pwsh -File ./powershell/setupPowerShell.ps1 -image Base && rm -rf .
 #    && dpkg -i azure-cli-latest-buster.deb \
 #    && rm -f azure-cli-latest-buster.deb
 
-# Install any Azure CLI extensions that should be included by default.
-RUN az extension add --system --name ai-examples -y
-RUN az extension add --system --name ssh -y
-
 # Install kubectl
 RUN az aks install-cli \
     && chmod +x /usr/local/bin/kubectl \
@@ -126,6 +122,10 @@ RUN curl -Lo bicep https://github.com/Azure/bicep/releases/latest/download/bicep
   && bicep --help
 
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
+# Install any Azure CLI extensions that should be included by default.
+RUN az extension add --system --name ai-examples -y
+RUN az extension add --system --name ssh -y
 
 # github CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg \
