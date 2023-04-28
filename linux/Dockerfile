@@ -12,15 +12,12 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommend
     jq \
     lsb-release \
     gpg \
-    apt-transport-https \
     gnupg \    
     wget \
     unzip \
     dos2unix \
     npm \
-    software-properties-common \
-    libssl-dev \
-    libffi-dev
+    software-properties-common 
 
 #COPY SOURCES .
 COPY linux/aptinstall.sh .
@@ -85,11 +82,7 @@ RUN /usr/bin/pwsh -File ./powershell/setupPowerShell.ps1 -image Base && rm -rf .
 # If you wish to have CloudPSDrive - persistent storage capability on the devoops agent or run commands directly on vms with PSCloudShellUtility run the invoke-preparepowershellscript
 #COPY ./linux/powershell/Invoke-PreparePowerShell.ps1 linux/powershell/Invoke-PreparePowerShell.ps1
 
-# Install latest Azure CLI package. CLI team drops latest (pre-release) package here prior to public release
-
-RUN wget -nv https://azurecliprod.blob.core.windows.net/cloudshell-release/azure-cli-latest-buster.deb \
-    && dpkg -i azure-cli-latest-buster.deb \
-    && rm -f azure-cli-latest-buster.deb
+RUN curl -L https://aka.ms/InstallAzureCli | bash
 
 # Install any Azure CLI extensions that should be included by default.
 RUN az extension add --system --name ai-examples -y
