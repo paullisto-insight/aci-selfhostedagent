@@ -29,7 +29,7 @@ RUN curl -sSL https://git.io/getLatestIstio | sh - \
   && chmod -R 755 $ISTIO_ROOT
 ENV PATH $PATH:$ISTIO_ROOT/bin
 
-RUN pip install pywinrm \
+RUN pip install pywinrm
 
 # Download and Install the latest packer (AMD64)
 RUN PACKER_VERSION=$(curl -sSL https://checkpoint-api.hashicorp.com/v1/check/packer | jq -r -M ".current_version") \
